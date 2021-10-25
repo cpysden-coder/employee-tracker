@@ -25,9 +25,9 @@ function askQuestion() {
             name: "choice",
             type: "list",
             message: "What do you want to do?",
-            choices: ["View all employees", "View all departments", "View all roles", "Add an employee"]
+            choices: ["View all employees", "View all departments", "View all roles", "Add an employee", "Add a department", "Add a role", "Update employee's role"]
         }
-        // "Add a department", "Add a role", "Add an employee", "Update an employee role", "Finish and Exit"
+        // "Update an employee role", "Finish and Exit"
     ]).then((data) => {
         if (data.choice === "View all employees") {
             db.query('SELECT * FROM employees', (err, data) => {
@@ -80,55 +80,100 @@ function askQuestion() {
                 }
             ]).then((data) => {
                 console.table(data);
-                askQuestion();
+                console.log(data.firstname);
+                db.query('INSERT INTO employees VALUES (?,?,?,?,?)', [null, data.firstname, data.lastname, data.roleid, data.managerid], (err, data) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.table("All Roles", data);
+                        console.log(data)
+                        askQuestion();
+                    }
+                });
+                // askQuestion();
+            })
+        } else if (data.choice === "Add a department") {
+            inquirer.prompt([
+                {
+                    name: "department",
+                    type: "input",
+                    message: "Input new department name"
+                },
+            ]).then((data) => {
+                console.table(data);
+                console.log(data.department);
+                db.query('INSERT INTO departments VALUES (?,?)', [null, data.department], (err, data) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.table("All Departments", data);
+                        console.log(data)
+                        askQuestion();
+                    }
+                });
+                // askQuestion();
+            })
+        } else if (data.choice === "Add a role") {
+            inquirer.prompt([
+                {
+                    name: "title",
+                    type: "input",
+                    message: "Input new role title"
+                },
+                {
+                    name: "salary",
+                    type: "input",
+                    message: "Input salary for new role"
+                },
+                {
+                    name: "departmentid",
+                    type: "input",
+                    message: "Input id for department role belongs to"
+                },
+            ]).then((data) => {
+                console.table(data);
+                console.log(data.role);
+                db.query('INSERT INTO roles VALUES (?,?,?,?)', [null, data.title, data.salary, data.departmentid], (err, data) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.table("All Roles", data);
+                        console.log(data)
+                        askQuestion();
+                    }
+                });
+                // askQuestion();
+            })
+        } else if (data.choice === "Update employee's role") {
+            inquirer.prompt([
+                {
+                    name: "employeeid",
+                    type: "input",
+                    message: "Input employee id"
+                },
+                {
+                    name: "new_roleid",
+                    type: "input",
+                    message: "Input new role id for employee"
+                },
+                
+            ]).then((data) => {
+                console.table(data);
+                console.log(data.role);
+                db.query('UPDATE employees SET role_id =? WHERE id= ?', [data.new_roleid, data.employeeid], (err, data) => {
+                    if (err) {
+                        throw err;
+                    } else {
+                        console.table("All Roles", data);
+                        console.log(data)
+                        askQuestion();
+                    }
+                });
+                // askQuestion();
             })
         }
-        //     console.log("view employees!")
-        //     console.log(data.choice);
-        //     // db.end();
-        //     // viewEmployees();
-        //     break;
-
-        // case "Add a department":
-        //     console.log("add an department")
-        //     // addDepartment();
-        //     break;
-
-        // case "Add a role":
-        //     console.log("add a role!")
-        //     // addRole();
-        //     break;
-
-        // case "Add an employee":
-        //     console.log("add an employee!")
-        //     return data
-        //     db.end();
-        //     // addEmployee();
-        //     break;
-
-        // case "Update an employee role":
-        //     console.log("add an employee!")
-        //     // addEmployee();
-        //     break;
-
-        // case "Finish and Exit":
-        //     console.log("finished updating company org!")
-        // console.log(`${team}`)
-        // console.log(team[0]);
-        // team.forEach(person => {
-        //     console.log(person.role + " role");
-        // });
-        // generateHTML(team);
-        // const htmlPageContent = generateHTML(answers);
-        // fs.writeFile('index.html', generateHTML(team), (err) => err ? console.log(err) : console.log('Successfully created index.html!'));
-        // break;
-
-        // default:
-        //     console.log("goodbye!")
-        //     break;
-        // }
 
     });
 };
 askQuestion();
-//working up to this point except that arrow selection keys don't work. Need to figure that out.
+//working up to this point except.
