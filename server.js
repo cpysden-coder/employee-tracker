@@ -25,7 +25,7 @@ function askQuestion() {
             name: "choice",
             type: "list",
             message: "What do you want to do?",
-            choices: ["View all employees", "View all departments", "View all roles", "Add an employee", "Add a department", "Add a role", "Update employee's role"]
+            choices: ["View all employees", "View all departments", "View all roles", "Add an employee", "Add a department", "Add a role", "Update employee's role", "QUIT"]
         }
         // "Update an employee role", "Finish and Exit"
     ]).then((data) => {
@@ -171,6 +171,9 @@ function askQuestion() {
                 });
                 // askQuestion();
             })
+        } else {
+            console.log("Goodbye");
+            db.end();
         }
 
     });
