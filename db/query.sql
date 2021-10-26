@@ -1,8 +1,6 @@
 SELECT
-    -> e.first_name + ' ' + e.last_name employee,
-    -> m.first_name + ' ' + m.last_name manager
+    -> employee.id AS banana,
+    -> employee.first_name AS orange
     -> FROM
-    -> employees e
-    -> INNER JOIN employees m ON m.id = e.manager_id
-    -> ORDER BY
-    -> manager;
+    -> employees
+    -> JOIN employees ON employees.id = employees.manager_id;
